@@ -39,16 +39,17 @@ app.post('/api/yandexgpt', async (req, res) => {
         });
 
         const data = await response.json();
-        
-        // Новый блок проверки:
-        if (!data.result || !data.result.alternatives) {
-            console.error('Ошибка от Яндекса:', data);
-            return res.status(500).json({ error: 'Ошибка от Яндекса', details: data });
-        }
-
         res.json({ text: data.result.alternatives[0].message.text });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Ошибка на сервере' });
     }
+});
+
+app.get('/', (req, res) => {
+    res.send('ЯндексGPT-прокси работает!');
+});
+
+app.listen(port, () => {
+    console.log(`Сервер запущен на порту ${port}`);
 });
