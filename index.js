@@ -1,8 +1,6 @@
-// index.js
-
 const express = require('express');
 const cors = require('cors');
-const fetch = require('node-fetch'); // если нужен node-fetch
+const fetch = require('node-fetch');
 require('dotenv').config();
 
 const app = express();
@@ -13,6 +11,10 @@ app.use(express.json());
 
 app.post('/api/yandexgpt', async (req, res) => {
     const { prompt } = req.body;
+
+    if (!prompt) {
+        return res.status(400).json({ error: 'Нет текста запроса.' });
+    }
 
     try {
         const response = await fetch('https://llm.api.cloud.yandex.net/foundationModels/v1/completion', {
@@ -42,6 +44,10 @@ app.post('/api/yandexgpt', async (req, res) => {
         console.error(error);
         res.status(500).json({ error: 'Ошибка на сервере' });
     }
+});
+
+app.get('/', (req, res) => {
+    res.send('ЯндексGPT-прокси работает!');
 });
 
 app.listen(port, () => {
